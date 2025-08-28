@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Todo - Task Management</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">
+                    <i class="fas fa-tasks"></i>
+                    Smart Todo
+                </h1>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="current-time" id="currentTime"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <div class="tab-container">
+                <button class="tab-btn active" data-tab="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="tab-btn" data-tab="tasks">
+                    <i class="fas fa-list-check"></i>
+                    <span>Tasks</span>
+                </button>
+                <button class="tab-btn" data-tab="daily">
+                    <i class="fas fa-calendar-day"></i>
+                    <span>Daily</span>
+                </button>
+                <button class="tab-btn" data-tab="weekly">
+                    <i class="fas fa-calendar-week"></i>
+                    <span>Weekly</span>
+                </button>
+                <button class="tab-btn" data-tab="completed">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Completed</span>
+                </button>
+                <button class="tab-btn" data-tab="analytics">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Analytics</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Tab -->
+            <div class="tab-content active" id="dashboard">
+                <div class="dashboard-grid">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3 id="totalTasks">0</h3>
+                            <p>Total Tasks</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3 id="pendingTasks">0</h3>
+                            <p>Pending</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3 id="completedTasks">0</h3>
+                            <p>Completed</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3 id="streakDays">0</h3>
+                            <p>Day Streak</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="addQuickTask">
+                            <i class="fas fa-plus"></i>
+                            Add Task
+                        </button>
+                        <button class="btn btn-secondary" id="startTimer">
+                            <i class="fas fa-play"></i>
+                            Start Timer
+                        </button>
+                        <button class="btn btn-secondary" id="viewToday">
+                            <i class="fas fa-calendar-day"></i>
+                            Today's Tasks
+                        </button>
+                    </div>
+                </div>
+
+                <div class="recent-tasks">
+                    <h2>Recent Tasks</h2>
+                    <div class="task-list" id="recentTasksList"></div>
+                </div>
+            </div>
+
+            <!-- Tasks Tab -->
+            <div class="tab-content" id="tasks">
+                <div class="tasks-header">
+                    <h2>All Tasks</h2>
+                    <button class="btn btn-primary" id="addTaskBtn">
+                        <i class="fas fa-plus"></i>
+                        Add New Task
+                    </button>
+                </div>
+                
+                <div class="task-filters">
+                    <select id="priorityFilter" class="filter-select">
+                        <option value="">All Priorities</option>
+                        <option value="high">High Priority</option>
+                        <option value="medium">Medium Priority</option>
+                        <option value="low">Low Priority</option>
+                    </select>
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <input type="text" id="searchTasks" placeholder="Search tasks..." class="search-input">
+                </div>
+
+                <div class="task-list" id="allTasksList"></div>
+            </div>
+
+            <!-- Daily Tab -->
+            <div class="tab-content" id="daily">
+                <div class="daily-header">
+                    <h2>Daily Tasks</h2>
+                    <div class="date-navigation">
+                        <button class="btn btn-icon" id="prevDay">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="current-date" id="currentDate"></span>
+                        <button class="btn btn-icon" id="nextDay">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="daily-stats">
+                    <div class="progress-circle">
+                        <svg class="progress-ring" width="120" height="120">
+                            <circle class="progress-ring-circle" stroke="currentColor" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                        </svg>
+                        <div class="progress-text">
+                            <span id="dailyProgress">0%</span>
+                        </div>
+                    </div>
+                    <div class="daily-summary">
+                        <p>Completed: <span id="dailyCompleted">0</span> / <span id="dailyTotal">0</span></p>
+                    </div>
+                </div>
+
+                <div class="task-list" id="dailyTasksList"></div>
+            </div>
+
+            <!-- Weekly Tab -->
+            <div class="tab-content" id="weekly">
+                <div class="weekly-header">
+                    <h2>Weekly Overview</h2>
+                    <div class="week-navigation">
+                        <button class="btn btn-icon" id="prevWeek">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="current-week" id="currentWeek"></span>
+                        <button class="btn btn-icon" id="nextWeek">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="weekly-chart">
+                    <canvas id="weeklyChart" width="400" height="200"></canvas>
+                </div>
+
+                <div class="weekly-summary">
+                    <div class="summary-card">
+                        <h3>This Week</h3>
+                        <div class="summary-stats">
+                            <div class="stat">
+                                <span class="stat-number" id="weeklyTotal">0</span>
+                                <span class="stat-label">Total Tasks</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number" id="weeklyCompleted">0</span>
+                                <span class="stat-label">Completed</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number" id="weeklyProgress">0%</span>
+                                <span class="stat-label">Progress</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Tab -->
+            <div class="tab-content" id="completed">
+                <div class="completed-header">
+                    <h2>Completed Tasks</h2>
+                    <div class="completed-filters">
+                        <select id="completedTimeFilter" class="filter-select">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="task-list" id="completedTasksList"></div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div class="tab-content" id="analytics">
+                <div class="analytics-header">
+                    <h2>Analytics & Insights</h2>
+                </div>
+                
+                <div class="analytics-grid">
+                    <div class="chart-card">
+                        <h3>Productivity Trend</h3>
+                        <canvas id="productivityChart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <h3>Task Categories</h3>
+                        <canvas id="categoryChart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div class="insights-card">
+                        <h3>Key Insights</h3>
+                        <div class="insights-list" id="insightsList"></div>
+                    </div>
+                    
+                    <div class="achievements-card">
+                        <h3>Achievements</h3>
+                        <div class="achievements-list" id="achievementsList"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Timer Modal -->
+        <div class="modal" id="timerModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Task Timer</h3>
+                    <button class="modal-close" id="closeTimerModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="timer-display">
+                        <div class="timer-time" id="timerDisplay">25:00</div>
+                        <div class="timer-controls">
+                            <button class="btn btn-primary" id="startTimerBtn">
+                                <i class="fas fa-play"></i>
+                                Start
+                            </button>
+                            <button class="btn btn-secondary" id="pauseTimerBtn" style="display: none;">
+                                <i class="fas fa-pause"></i>
+                                Pause
+                            </button>
+                            <button class="btn btn-danger" id="resetTimerBtn">
+                                <i class="fas fa-redo"></i>
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                    <div class="timer-settings">
+                        <label>Timer Duration (minutes):</label>
+                        <input type="number" id="timerDuration" value="25" min="1" max="120">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add/Edit Task Modal -->
+        <div class="modal" id="taskModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="taskModalTitle">Add New Task</h3>
+                    <button class="modal-close" id="closeTaskModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="taskForm">
+                        <div class="form-group">
+                            <label for="taskTitle">Task Title</label>
+                            <input type="text" id="taskTitle" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taskDescription">Description</label>
+                            <textarea id="taskDescription" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taskPriority">Priority</label>
+                                <select id="taskPriority">
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="taskCategory">Category</label>
+                                <select id="taskCategory">
+                                    <option value="work">Work</option>
+                                    <option value="personal">Personal</option>
+                                    <option value="health">Health</option>
+                                    <option value="learning">Learning</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taskDueDate">Due Date</label>
+                                <input type="date" id="taskDueDate">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="taskDueTime">Due Time</label>
+                                <input type="time" id="taskDueTime">
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelTask">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="saveTask">Save Task</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Add Task Modal -->
+        <div class="modal" id="quickTaskModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Quick Add Task</h3>
+                    <button class="modal-close" id="closeQuickTaskModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="quickTaskForm">
+                        <div class="form-group">
+                            <label for="quickTaskTitle">Task Title</label>
+                            <input type="text" id="quickTaskTitle" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="quickTaskPriority">Priority</label>
+                            <select id="quickTaskPriority">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelQuickTask">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="saveQuickTask">Add Task</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Timer Button -->
+    <div class="floating-timer" id="floatingTimer">
+        <button class="floating-timer-btn" id="floatingTimerBtn">
+            <i class="fas fa-clock"></i>
+            <span class="floating-timer-text" id="floatingTimerText">25:00</span>
+        </button>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
